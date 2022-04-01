@@ -193,7 +193,7 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
     sendkeys = [
         ['//*[@id="input_1629163601122"]/input', '15988816592', '电话号码'],
         ['//*[@id="input_1611108030781"]/input', '海韵学生公寓7-429', '今日住址'],
-        ['//*[@id="input_1611108449736"]/input', '0427', '房间号'],
+        ['//*[@id="input_1611108449736"]/input', '0429', '房间号'],
     ]
 
 
