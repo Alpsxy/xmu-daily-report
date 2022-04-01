@@ -66,6 +66,15 @@ def must_operate_element_by_xpath(driver: WebDriver, xpath: str, do: Callable, c
         driver.close()
         fail(f"{comment} 失败", "", "", e, False, True)
 
+def send_input_by_xpath(driver: WebDriver, xpath: str, content: str, comment: str):
+    try:
+        target = WebDriverWait(driver, 10).until(
+                    lambda x: x.find_element(By.XPATH, xpath))
+        target.send_keys(content)
+        logger.info(f"{comment} 填入成功")
+    except Exception as e:
+        driver.close()
+        fail(f"{comment} 填入失败", "", "", e, False, True)
 
 def click_given_xpath(driver: WebDriver, xpath: str, comment: str):
     must_operate_element_by_xpath(driver, xpath, lambda x: x.click(), "点击 " + comment)
@@ -75,11 +84,14 @@ def get_text(driver: WebDriver, xpath: str, comment: str) -> str:
     return must_operate_element_by_xpath(driver, xpath, lambda x: x.text, f"获取 {comment} 文本")
 
 
+def get_input(driver: WebDriver, xpath: str, comment: str) -> str:
+    return must_operate_element_by_xpath(driver, xpath, lambda x: x.getAttribute("value"), f"获取 {comment} 文本")
+
+
 def select_dropdown(driver: WebDriver, dropdown_xpath: str, target_xpath: str, comment: str):
     click_given_xpath(driver, dropdown_xpath, f"{comment} 下拉框")
     time.sleep(1)
     click_given_xpath(driver, target_xpath, f"{comment} 选项")
-
 
 def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
     if debug:
@@ -143,21 +155,66 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
     的顺序添加项并提交PR
     """
     dropdowns = [
+        ['//*[@id="select_1611107962967"]/div/div', '//label[@title="国内"][1]', '在国内还是国外'],
         ['//*[@id="address_1582538163410"]/div/div[1]/div/div', '//label[@title="福建省"][1]', '省'],
         ['//*[@id="address_1582538163410"]/div/div[2]/div/div', '//label[@title="厦门市"][1]', '市'],
         ['//*[@id="address_1582538163410"]/div/div[3]/div/div', '//label[@title="思明区"][1]', '区'],
+        ['//*[@id="select_1611108284522"]/div/div', '//label[@title="在校"][1]', '是否在校'],
+        ['//*[@id="select_1582538643070"]/div/div', '//label[@title="思明校区 Siming"][1]', '校区'],
+        ['//*[@id="select_1611110401193"]/div/div', '//label[@title="住校内  Yes，on campus"][1]', '是否住校内'],
+        ['//*[@id="select_1611108377024"]/div/div', '//label[@title="住校内学生宿舍"][1]', '是否住在校内学生宿舍'],
+        ['//*[@id="select_1611108445364"]/div/div', '//label[@title="思明海韵07"][1]', '楼栋'],
+        ['//*[@id="select_1582538796361"]/div/div', '//label[@title="37.3以下 Below 37.3 degree celsius"][1]', '今日体温'],
+        ['//*[@id="select_1582538846920"]/div/div', '//label[@title="否 No"][1]', '是否出现发热'],
+        ['//*[@id="select_1635333230224"]/div/div', '//label[@title="是Yes"][1]', '是否激活医保电子凭证'],
         ["//*[@id='select_1582538939790']/div/div/span[1]", "/html/body/div[8]/ul/div/div[3]/li/label", '本人承诺']
     ]
-    time.sleep(2)
+
+    # sendkeys = [
+    #     ['//*[@id="address_1582538163410"]/div/div[1]/div/div', '//label[@title="福建省"][1]', '省'],
+    #     ['//*[@id="address_1582538163410"]/div/div[2]/div/div', '//label[@title="厦门市"][1]', '市'],
+    #     ['//*[@id="address_1582538163410"]/div/div[3]/div/div', '//label[@title="翔安区"][1]', '区'],
+    # ]
+
+    # for sendkey in sendkeys:
+    #     if NULL in get_text(driver, sendkey[0], sendkey[2]):
+    #         sendkey(driver, *dropdown)
+    #         time.sleep(1)
+    #     else:
+    #         logger.info(f'{dropdown[2]} 已填写')            
+
     for dropdown in dropdowns:
         if NULL in get_text(driver, dropdown[0], dropdown[2]):
             select_dropdown(driver, *dropdown)
-            time.sleep(1)
+            time.sleep(3)
         else:
             logger.info(f'{dropdown[2]} 已填写')
-            
-    room = driver.find_element(By.XPATH, '//*[@id="input_1611108449736"]/input')
-    driver.set_value(room,"1234")
+
+    sendkeys = [
+        ['//*[@id="input_1629163601122"]/input', '15988816592', '电话号码'],
+        ['//*[@id="input_1611108030781"]/input', '海韵学生公寓7-429', '今日住址'],
+        ['//*[@id="input_1611108449736"]/input', '0427', '房间号'],
+    ]
+
+
+    for key in sendkeys:
+        if NULL in get_input(driver, key[0], key[2]) or get_input(driver, key[0], key[2]) == '':
+            send_input_by_xpath(driver, *key)
+            time.sleep(3)
+        else:
+            logger.info(f'{key[2]} 已填写')
+
+    # phone = driver.find_element(By.XPATH, '//*[@id="input_1629163601122"]/input')
+    # phone.send_keys('15988816592')
+
+    # taddr = driver.find_element(By.XPATH, '//*[@id="input_1611108030781"]/input')
+    # taddr.send_keys('海韵学生公寓7-429')
+
+    # room = driver.find_element(By.XPATH, '//*[@id="input_1611108449736"]/input')
+    # room.send_keys('0427')
+
+
+
     # 点击保存按钮
     click_given_xpath(driver, "//span[starts-with(text(),'保存')][1]", "保存")
 
