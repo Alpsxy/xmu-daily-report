@@ -148,16 +148,17 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
         ['//*[@id="address_1582538163410"]/div/div[3]/div/div', '//label[@title="思明区"][1]', '区'],
         ["//*[@id='select_1582538939790']/div/div/span[1]", "/html/body/div[8]/ul/div/div[3]/li/label", '本人承诺']
     ]
-    roomtab = driver.find_element(By.ID, 'input_1611108449736')
-    room = driver.find_element(By.TAG_NAME, 'input')
-    room.send_keys('0427')
+    time.sleep(2)
     for dropdown in dropdowns:
         if NULL in get_text(driver, dropdown[0], dropdown[2]):
             select_dropdown(driver, *dropdown)
             time.sleep(1)
         else:
             logger.info(f'{dropdown[2]} 已填写')
-
+            
+    roomtab = driver.find_element(By.ID, 'input_1611108449736')
+    room = driver.find_element(By.TAG_NAME, 'input')
+    room.send_keys('0427')
     # 点击保存按钮
     click_given_xpath(driver, "//span[starts-with(text(),'保存')][1]", "保存")
 
