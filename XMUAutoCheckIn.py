@@ -85,7 +85,7 @@ def get_text(driver: WebDriver, xpath: str, comment: str) -> str:
 
 
 def get_input(driver: WebDriver, xpath: str, comment: str) -> str:
-    return must_operate_element_by_xpath(driver, xpath, lambda x: x.getAttribute("value"), f"获取 {comment} 文本")
+    return must_operate_element_by_xpath(driver, xpath, lambda x: x.get_attribute("value"), f"获取 {comment} 文本")
 
 
 def select_dropdown(driver: WebDriver, dropdown_xpath: str, target_xpath: str, comment: str):
