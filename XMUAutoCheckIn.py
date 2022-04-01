@@ -157,7 +157,7 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
             logger.info(f'{dropdown[2]} 已填写')
             
     room = driver.find_element(By.XPATH, '//*[@id="input_1611108449736"]/input')
-    room.send_keys('0427')
+    driver.set_value(room,"1234")
     # 点击保存按钮
     click_given_xpath(driver, "//span[starts-with(text(),'保存')][1]", "保存")
 
