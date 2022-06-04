@@ -102,11 +102,11 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
     login_url = VPN_LOGIN_URL if use_vpn else DIRECT_LOGIN_URL
     checkin_url = VPN_CHECKIN_URL if use_vpn else DIRECT_CHECKIN_URL
     logger.info("准备工作完成")
-
+    time.sleep(3)
     # 进入登录页面
     logger.info("正在请求登录页面")
     driver.get(login_url)
-
+    time.sleep(3)
     if use_vpn:
         # 首先登陆WebVPN，根据上面url在WebVPN登陆成功后会自动跳转打卡登录界面
         logintab = driver.find_element(By.CLASS_NAME, 'login-box')
@@ -121,10 +121,12 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
         login.click()
         logger.info("VPN登录完成")
         time.sleep(1)
-
+        
+    time.sleep(3)
+           
     # 选择统一身份认证登录跳转到真正的登录页面
     click_given_xpath(driver, '//*[@id="loginLayout"]/div[3]/div[2]/div/button[3]', "统一身份认证")
-
+    time.sleep(3)
     # 查找页面元素，如果某些元素查找不到则返回错误
     try:
         logger.info("进入XMUXG登录页面")
@@ -137,18 +139,18 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
         logger.error(e)
         driver.close()
         raise RuntimeError("XMUXG登录失败", e)
-
+    time.sleep(3)
     # 输入用户名密码并点击登录
     user.send_keys(username)
     pwd.send_keys(passwd)
     login.click()
-
+    time.sleep(3)
     # 重新跳转到打卡页面
     driver.get(checkin_url)
-
+    time.sleep(3)
     # 开始工作
     click_given_xpath(driver, '//*[@id="mainM"]/div/div/div/div[1]/div[2]/div/div[3]/div[2]', "我的表单")
-
+    time.sleep(3)
     """
     开发者注意：如果发现新的下拉框可能需要填写，请在为dropdowns列表按照
     下拉框XPATH     选项XPATH    下拉框描述
