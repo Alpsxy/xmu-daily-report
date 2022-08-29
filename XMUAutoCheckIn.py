@@ -168,7 +168,6 @@ def checkin(username, passwd, passwd_vpn, email, use_vpn=True) -> None:
         ['//*[@id="select_1611108445364"]/div/div', '//label[@title="思明海韵07"][1]', '楼栋'],
         ['//*[@id="select_1582538796361"]/div/div', '//label[@title="37.3以下 Below 37.3 degree celsius"][1]', '今日体温'],
         ['//*[@id="select_1582538846920"]/div/div', '//label[@title="否 No"][1]', '是否出现发热'],
-        ['//*[@id="select_1635333230224"]/div/div', '//label[@title="是Yes"][1]', '是否激活医保电子凭证'],
         ["//*[@id='select_1582538939790']/div/div/span[1]", "/html/body/div[8]/ul/div/div[3]/li/label", '本人承诺']
     ]
 
